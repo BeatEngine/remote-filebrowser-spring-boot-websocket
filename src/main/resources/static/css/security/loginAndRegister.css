@@ -1,0 +1,38 @@
+
+body {
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: absolute;
+}
+
+.blue-shine-background
+{
+    background: rgb(32,214,255);
+    background: radial-gradient(circle, rgba(32,214,255,1) 0%, rgba(0,133,185,1) 100%);
+}
+
+.form-control-transparent {
+    background: transparent !important;
+    border-color: rgba(0,133,185,0.5) !important;
+    border-width: 2px !important;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.auth-error {
+    color: darkred;
+}
+
+.register-form {
+
+}
+
+.login-form {
+
+}
