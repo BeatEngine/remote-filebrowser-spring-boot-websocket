@@ -41,11 +41,13 @@ function disconnect() {
     setConnected(false);
     console.log("Disconnected");
 }
+
 /**
 * Send a HTMLComponentMessage object that contains the id parameter to trigger a reload of the specific html-node by subscription callback.
 * @param id The html-element-id that shall be reloaded
+* @param props Properties for the request {'key1':'value1', 'key2':'value2'} example {'page':'2', 'items-per-page':'20'}
 */
-function triggerLoad(id) {
+function triggerLoad(id, props = {}) {
     stompClient.publish({
         destination: "/app/component",
         body: JSON.stringify({
@@ -53,7 +55,8 @@ function triggerLoad(id) {
             request: true,
             response: false,
             html: '',
-            version: '1.0.0'
+            version: '1.0.0',
+            props: props
         })
     });
 }

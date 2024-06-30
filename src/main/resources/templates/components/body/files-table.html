@@ -1,0 +1,39 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="files-table" class="app-body-files">
+
+    <table class="files-table">
+        <head>
+            <tr>
+                <th><!-- Symbol --></th>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Date</th>
+            </tr>
+        </head>
+        <tbody>
+            <tr th:each="file : ${fileinfos}">
+                <td th:text="${file.folder} ? 'DIR' : 'FIL'"></td>
+                <td th:text="${file.name}"></td>
+                <td th:text="${file.size}"></td>
+                <td th:text="${file.creation}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <style>
+        .app-body-files {
+            display: inline-flex;
+            flex: 1;
+            width: 100%;
+            height: 40px;
+            border-bottom: solid grey 1px;
+        }
+
+        .files-table {
+            align-self: baseline;
+        }
+
+    </style>
+    <script type="text/javascript">
+        /* Load this component */
+    </script>
+</div>

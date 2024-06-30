@@ -1,0 +1,19 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="body" class="app-body">
+    <div th:replace="components/body/files-table::files-table"></div>
+    <style>
+        .app-body {
+            display: flex;
+            flex-direction: column;
+            vertical-align: top;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: calc(100% - 140px);
+            overflow-y: auto;
+            background-color: bisque;
+        }
+    </style>
+    <script type="text/javascript">
+        /* Load this component */
+    </script>
+</div>

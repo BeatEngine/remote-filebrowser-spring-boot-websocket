@@ -1,0 +1,42 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="navigation-path" class="app-header-path">
+    <span class="back-to-parent" onclick="navigateToParent()"><-</span>
+    <input class="nav-path" th:value="${currentPath}" />
+    <input class="nav-search" placeholder="Search ..."/>
+    <style>
+        .app-header-path {
+            display: inline-flex;
+            flex: 1;
+            width: 100%;
+            height: 40px;
+            border-bottom: solid grey 1px;
+        }
+
+        .nav-search {
+            width: 400px;
+            right: 100px;
+            align-self: center;
+            height: 80%;
+        }
+
+        .nav-path {
+            font-size: 14pt;
+            width: 600px;
+            margin-inline: 10px;
+            align-self: center;
+            height: 80%;
+        }
+
+        .back-to-parent {
+            align-content: center;
+            font-size: 14pt;
+            width: 40px;
+            margin-inline: 10px;
+        }
+        .back-to-parent:hover {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        /* Load this component */
+    </script>
+</div>

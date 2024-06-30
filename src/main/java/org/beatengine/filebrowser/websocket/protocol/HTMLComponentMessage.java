@@ -1,5 +1,8 @@
 package org.beatengine.filebrowser.websocket.protocol;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class HTMLComponentMessage {
 
     private String id;
@@ -11,6 +14,8 @@ public class HTMLComponentMessage {
     private String html;
 
     private String version = "1.0.0";
+
+    private Map<String, String> props = new HashMap<>();
 
     public HTMLComponentMessage() {
     }
@@ -60,5 +65,13 @@ public class HTMLComponentMessage {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public Map<String, String> getProps() {
+        return props;
+    }
+
+    public void setProps(Map<String, String> props) {
+        this.props = props;
     }
 }

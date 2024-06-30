@@ -1,1 +1,15 @@
-<h1 xmlns:th="http://www.thymeleaf.org" th:text="${customText}"></h1>
+<div xmlns:th="http://www.thymeleaf.org" class="app-main">
+    <div th:replace="components/header::header"></div>
+    <div th:replace="components/body::body"></div>
+    <div th:replace="components/footer::footer"></div>
+    <style>
+        .app-main {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript">
+        /* Load main component ## global-variables goes here ## */
+    </script>
+</div>

@@ -26,7 +26,7 @@ public class MainAppController {
 
 
         ModelAndView mav = new ModelAndView("index");
-        mav.addObject("initTitle", "Online shop DEMO - Spring & VUE");
+        mav.addObject("initTitle", "File browser DEMO - Spring & STOMP");
         mav.addObject("jsPath", "js/");
         return mav;
     }
