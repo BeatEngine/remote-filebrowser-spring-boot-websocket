@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static Cookie getSessionCookie(final String jwtToken) {
         final Cookie cookie = new Cookie(AUTH_COOKIE_NAME, jwtToken);
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false); // Needed for Websocket auth
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(JwtService.SESSION_TOKEN_LIFETIME_SEC);

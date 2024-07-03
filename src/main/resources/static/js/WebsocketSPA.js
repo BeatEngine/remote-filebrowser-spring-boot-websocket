@@ -2,9 +2,18 @@ const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/gs-guide-websocket'
 });
 
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop().split(';').shift();
+  }
+  return '';
+}
 
 var uninitialized = true;
 var connected = false;
+var session = getCookie('auth-session');
 
 function init() {
     connect();
@@ -51,6 +60,7 @@ function triggerLoad(id, props = {}) {
     stompClient.publish({
         destination: "/app/component",
         body: JSON.stringify({
+            session: session,
             id: id,
             request: true,
             response: false,
@@ -66,9 +76,14 @@ function triggerLoad(id, props = {}) {
 * @param component HTMLComponentMessage (see body in triggerLoad above).
 */
 function reloadComponent(component) {
-    console.log(component);
+    //console.log(component);
+    const redirect = component.props['redirect'];
     const e = document.getElementById(component.id);
     e.innerHTML = component.html;
+    if(redirect)
+    {
+        location = redirect;
+    }
 }
 
 // ######################## Initialize / first load the whole SPA. ########################

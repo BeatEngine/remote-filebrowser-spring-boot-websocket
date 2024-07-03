@@ -3,10 +3,12 @@ package org.beatengine.filebrowser.websocket.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.beatengine.filebrowser.mapping.FileInfo;
+import org.beatengine.filebrowser.security.Token;
 import org.beatengine.filebrowser.security.TokenStore;
 import org.beatengine.filebrowser.websocket.protocol.HTMLComponentMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.thymeleaf.TemplateEngine;
@@ -39,6 +41,18 @@ public class HTMLDeliveryController {
     @MessageMapping("/component")
     @SendTo("/topic/components")
     public HTMLComponentMessage resolveMessage(final HTMLComponentMessage message) throws Exception {
+        // ### Check Authentication ###
+        final Token token = tokenStore.findByToken(message.getSession());
+        if(token == null || token.isExpired())
+        {
+            // Unauthenticated --> redirect to /auth/login
+            final HTMLComponentMessage redirect = new HTMLComponentMessage(message.getId(),
+                    "<h2>Unauthenticated!</h2>", false, true);
+            HashMap<String, String> props = new HashMap<>();
+            props.put("redirect", "./auth/login");
+            redirect.setProps(props);
+            return redirect;
+        }
 
         final String html = resolveTemplate(message);
         runActions(message.getProps());
