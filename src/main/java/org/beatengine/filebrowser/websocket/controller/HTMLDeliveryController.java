@@ -3,6 +3,7 @@ package org.beatengine.filebrowser.websocket.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.beatengine.filebrowser.mapping.FileInfo;
+import org.beatengine.filebrowser.security.JwtAuthenticationFilter;
 import org.beatengine.filebrowser.security.Token;
 import org.beatengine.filebrowser.security.TokenStore;
 import org.beatengine.filebrowser.websocket.protocol.HTMLComponentMessage;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -37,12 +39,24 @@ public class HTMLDeliveryController {
 
     private Path currentPath = Path.of(System.getProperty("user.home"));
 
+    /**
+     * The websocket method reload any html when required
+     * @param message The requested html-component
+     * @param accessor Used to get Cookies mapped in CookieHandshakeInterceptor
+     * @return
+     * @throws Exception
+     */
     /*           --> /app/component */
     @MessageMapping("/component")
     @SendTo("/topic/components")
-    public HTMLComponentMessage resolveMessage(final HTMLComponentMessage message) throws Exception {
+    public HTMLComponentMessage resolveMessage(final HTMLComponentMessage message, final SimpMessageHeaderAccessor accessor) throws Exception {
         // ### Check Authentication ###
-        final Token token = tokenStore.findByToken(message.getSession());
+        final Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
+        String httpOnlyCookieValue = null;
+        if(sessionAttributes != null) {
+            httpOnlyCookieValue = (String) sessionAttributes.getOrDefault(JwtAuthenticationFilter.AUTH_COOKIE_NAME, "");
+        }
+        final Token token = tokenStore.findByToken(httpOnlyCookieValue);
         if(token == null || token.isExpired())
         {
             // Unauthenticated --> redirect to /auth/login

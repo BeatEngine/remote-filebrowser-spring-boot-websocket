@@ -2,18 +2,14 @@ package org.beatengine.filebrowser.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 
 @Service
@@ -38,12 +34,11 @@ public class JwtService {
 
 
     public String generateToken(final Map<String, Object> extraClaims, final UserDetails userDetails) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plusSeconds(SESSION_TOKEN_LIFETIME_SEC)))
-                .signWith(getSigeInKey(), SignatureAlgorithm.HS256)
+        return Jwts.builder().claims(extraClaims).
+                subject(userDetails.getUsername())
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plusSeconds(SESSION_TOKEN_LIFETIME_SEC)))
+                .signWith(getSignInKey())
                 .compact();
     }
 
@@ -56,35 +51,24 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private static String getRandomHexString(final int length){
-        final Random r = new Random();
-        final StringBuffer sb = new StringBuffer();
-        while(sb.length() < length){
-            sb.append(Integer.toHexString(r.nextInt()));
-        }
-        return sb.toString().substring(0, length);
-    }
-
     public <T> T extractClaim(final String token, final Function<Claims, T> claimsResolver)
     {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private static final String SIGN_IN_KEY = getRandomHexString(256);
 
-    private Key getSigeInKey()
+    private SecretKey getSignInKey()
     {
-        final byte[] kb = Decoders.BASE64.decode(SIGN_IN_KEY);
-        return Keys.hmacShaKeyFor(kb);
+        return Jwts.SIG.HS256.key().build();
     }
 
     private Claims extractAllClaims(final String token)
     {
         return Jwts.parser()
-                .setSigningKey(getSigeInKey())
+                .decryptWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
-                .getBody();
+                .getPayload();
     }
 }

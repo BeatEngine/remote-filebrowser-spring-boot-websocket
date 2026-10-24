@@ -18,7 +18,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/gs-guide-websocket");
+        registry.addEndpoint("/gs-guide-websocket").
+                addInterceptors(new CookieHandshakeInterceptor())/* Extract the current httpOnlyCookie from Handshake */;
     }
 
 }

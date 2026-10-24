@@ -2,18 +2,8 @@ const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/gs-guide-websocket'
 });
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) {
-    return parts.pop().split(';').shift();
-  }
-  return '';
-}
-
 var uninitialized = true;
 var connected = false;
-var session = getCookie('auth-session');
 
 function init() {
     connect();
@@ -47,7 +37,6 @@ function connect() {
 
 function disconnect() {
     stompClient.deactivate();
-    setConnected(false);
     console.log("Disconnected");
 }
 
@@ -60,7 +49,6 @@ function triggerLoad(id, props = {}) {
     stompClient.publish({
         destination: "/app/component",
         body: JSON.stringify({
-            session: session,
             id: id,
             request: true,
             response: false,

@@ -3,7 +3,7 @@ package org.beatengine.filebrowser.websocket.protocol;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HTMLComponentMessage extends AuthMessage{
+public class HTMLComponentMessage{
 
     private String id;
 
